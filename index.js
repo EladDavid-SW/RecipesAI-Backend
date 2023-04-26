@@ -3,8 +3,10 @@ const bodyParser = require('body-parser')
 require('dotenv').config()
 
 const db = require('./DB/mongoDB.js')
-db.connect()
-
+const startDB = async () => {
+  await db.connect()
+}
+startDB()
 
 const server = express()
 
