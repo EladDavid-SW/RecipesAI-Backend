@@ -3,10 +3,8 @@ const { MongoClient } = require('mongodb')
 const uri = process.env.MONGO_URI
 
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true })
-
 async function connect() {
   try {
-    console.log('ddsf')
     await client.connect()
     console.log('Connected to MongoDB Atlas')
   } catch (err) {
@@ -47,9 +45,22 @@ async function create(databaseName, collectionName, document) {
   }
 }
 
+async function deleteAll(databaseName, collectionName) {
+  try {
+    const db = client.db(databaseName)
+    const collection = db.collection(collectionName)
+    const result = await collection.deleteMany({})
+    console.log(`Deleted ${result.deletedCount} documents from ${collectionName} collection`)
+    return result
+  } catch (err) {
+    console.log('Error deleting documents:', err)
+  }
+}
+
 module.exports = {
   connect,
   close,
   query,
   create,
+  deleteAll,
 }

@@ -17,7 +17,7 @@ class DaliEService {
     for (const prompt of prompts) {
       const data = {
         model: 'image-alpha-001',
-        prompt: `white background with the grocery ${prompt}`,
+        prompt: prompt,
         num_images: 1,
         size: '512x512',
         response_format: 'url',

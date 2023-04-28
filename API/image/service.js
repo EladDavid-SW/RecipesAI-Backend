@@ -29,17 +29,23 @@ class ImageService {
       }
     }
     console.log('HHHHEEEEEEEEEEEEEEEEEEEEEEEEEEEERRRRRRRRRRREEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE')
-    console.log(images_url)
+    console.log(groceries)
 
     if (groceries.length > 0) {
+      let prompts = []
+      for(let grocery of groceries){
+        prompts.push(`white background with the grocery: ${grocery}`)
+      }
+      console.log(prompts);
       // Generate images from Dali-E endpoint
-      let new_images = await this.daliEService.generatePhoto(groceries)
+      let new_images = await this.daliEService.generatePhoto(prompts)
       console.log(new_images)
       images_url= [...images_url,... new_images]
       
       // Store the results in DB:
       for (let new_image of new_images) {
-        let document = await { name: new_image.prompt, url: new_image.url }
+        let groceryName=  new_image.prompt.substring( new_image.prompt.indexOf(":") + 2);
+        let document = await { name: groceryName, url: new_image.url }
         await this.db.create('Recipes', 'images', document)
       }
     }
@@ -47,11 +53,7 @@ class ImageService {
     console.log('finall resultttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt::::')
     console.log(images_url)
 
-    let collectionn = await this.db.query('Recipes', 'images', {})
-    console.log('eeee')
-    console.log(collectionn)
-    // returnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn
-    return images_url
+    return images_url.map((grocery) => {{}})
   }
 }
 

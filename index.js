@@ -5,6 +5,7 @@ require('dotenv').config()
 const db = require('./DB/mongoDB.js')
 const startDB = async () => {
   await db.connect()
+  // await db.deleteAll('Recipes', 'images')
 }
 startDB()
 
