@@ -11,7 +11,7 @@ class ChatGPTService {
       model: 'text-davinci-003',
       prompt: message,
       temperature: 1,
-      max_tokens: 100,
+      max_tokens: 1000,
     })
 
     const { text } = response.data.choices[0]

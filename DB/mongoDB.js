@@ -26,7 +26,7 @@ async function query(databaseName, collectionName, queryObj) {
     const db = client.db(databaseName)
     const collection = db.collection(collectionName)
     const result = await collection.find(queryObj).toArray()
-    console.log('Query result:', result)
+    console.log('Query Done Successfully')
     return result
   } catch (err) {
     console.log('Error performing query:', err)
