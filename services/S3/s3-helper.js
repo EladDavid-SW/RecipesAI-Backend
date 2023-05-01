@@ -8,8 +8,8 @@ const fs = require('fs')
 class ImageService {
   constructor() {
     this.s3Service = new S3Service()
-    this.Bucket = bucketName
-    this.Key = objectKey
+    this.Bucket = process.env.BUCKET_NAME
+    this.Key = process.env.OBJECT_KEY
   }
 
   async uploadImage(imageURL, key) {
