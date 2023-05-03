@@ -12,13 +12,12 @@ class ImageService {
     this.Key = process.env.OBJECT_KEY
   }
 
-  async uploadImage(imageURL, key) {
+  async uploadImage(imageURL) {
     try {
-      // Get the image data from the request body
-      const imageData = req.body
 
       // Upload the image data to the S3 bucket
-      const result = await s3Service.uploadImage(this.Bucket, this.Key, imageData)
+      console.log(imageURL);
+      const result = await this.s3Service.uploadImage(this.Bucket, this.Key, imageURL)
 
       // Return the result of the S3 operation
     } catch (error) {
@@ -31,7 +30,7 @@ class ImageService {
     // return a URL for the image in the s3 bucket
     try {
       // Get the image data from the S3 bucket
-      const imageURL = await s3Service.getImage(this.Bucket, imageName)
+      const imageURL = await this.s3Service.getImage(this.Bucket, imageName)
 
       return imageURL
     } catch (error) {

@@ -28,9 +28,9 @@ class S3Service {
     };
 
     // Get the image data from the S3 bucket
-    const result = await this.s3.getObject(params).promise();
+    const url = await this.s3.getSignedUrl('getObject', params);
 
-    return result.Body;
+    return url;
   }
 }
 
