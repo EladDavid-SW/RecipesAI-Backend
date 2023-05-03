@@ -13,37 +13,36 @@ class ImageService {
     let images_url = []
     const all_groceries = groceries
     for (let grocery of all_groceries) {
-      for (let doc of collection) {
-        if (grocery == doc?.name) {
-          images_url.push({ name: doc.name, url: doc.url })
-          let new_groceries = await groceries.filter((grocery_item) => grocery !== grocery_item)
-          groceries = new_groceries
-          break
+      if (collection)
+        for (let doc of collection) {
+          if (grocery == doc?.name) {
+            images_url.push({ name: doc.name, url: doc.url })
+            let new_groceries = await groceries.filter((grocery_item) => grocery !== grocery_item)
+            groceries = new_groceries
+            break
+          }
         }
-      }
     }
 
     if (groceries.length > 0) {
       let prompts = []
-      for(let grocery of groceries){
-        prompts.push(`white background with the grocery: ${grocery}`)
+      for (let grocery of groceries) {
+        prompts.push({ prompt: `white background with the grocery: ${grocery}`, name: grocery })
       }
 
       // Generate images from Dali-E endpoint
       let new_images = await this.daliEService.generatePhoto(prompts)
-      
+
       // Store the results in DB:
       for (let new_image of new_images) {
-        let groceryName=  new_image.prompt.substring( new_image.prompt.indexOf(":") + 2);
+        let groceryName = new_image.name
         let document = await { name: groceryName, url: new_image.url }
         await this.db.create('Recipes', 'images', document)
         new_image.name = groceryName
         delete new_image.prompt
       }
-      images_url= [...images_url,... new_images]
+      images_url = [...images_url, ...new_images]
     }
-
-    
 
     return images_url
   }

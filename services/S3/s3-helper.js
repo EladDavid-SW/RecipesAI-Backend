@@ -9,15 +9,13 @@ class ImageService {
   constructor() {
     this.s3Service = new S3Service()
     this.Bucket = process.env.BUCKET_NAME
-    this.Key = process.env.OBJECT_KEY
   }
 
-  async uploadImage(imageURL) {
+  async uploadImage(imageURL, objectKey) {
     try {
 
       // Upload the image data to the S3 bucket
-      console.log(imageURL);
-      const result = await this.s3Service.uploadImage(this.Bucket, this.Key, imageURL)
+      const result = await this.s3Service.uploadImage(this.Bucket, objectKey, imageURL)
 
       // Return the result of the S3 operation
     } catch (error) {

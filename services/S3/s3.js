@@ -1,40 +1,47 @@
-const AWS = require('aws-sdk');
+const AWS = require('aws-sdk')
+const axios = require('axios');
+
 
 class S3Service {
   constructor() {
     // Create an instance of the S3 service
-    this.s3 = new AWS.S3();
+    this.s3 = new AWS.S3()
   }
 
-  async uploadImage(bucketName, objectKey, imageData) {
-    // Define the parameters for the S3 putObject operation
-    const params = {
-      Bucket: bucketName,
-      Key: objectKey,
-      Body: imageData
-    };
-
-    // Upload the image data to the S3 bucket
-    const result = await this.s3.putObject(params).promise();
-
-    return result;
+  async uploadImage(bucketName, objectKey, imageUrl) {
+    axios
+      .get(imageUrl, { responseType: 'arraybuffer' })
+      .then((response) => {
+        const imageBuffer = Buffer.from(response.data, 'binary')
+        const contentType = response.headers['content-type']
+        const uploadParams = {
+          Bucket: bucketName,
+          Key: objectKey,
+          Body: imageBuffer,
+          ContentType: contentType,
+        }
+        return this.s3.upload(uploadParams).promise()
+      })
+      .then((data) => {
+        console.log(`Image uploaded successfully to S3: ${data.Location}`)
+      })
+      .catch((error) => {
+        console.error('Error uploading image to S3:', error)
+      })
   }
 
   async getImage(bucketName, objectKey) {
     // Define the parameters for the S3 getObject operation
     const params = {
       Bucket: bucketName,
-      Key: objectKey
-    };
+      Key: objectKey,
+    }
 
     // Get the image data from the S3 bucket
-    const url = await this.s3.getSignedUrl('getObject', params);
+    const url = await this.s3.getSignedUrl('getObject', params)
 
-    return url;
+    return url
   }
 }
 
-module.exports = S3Service;
-
-
-
+module.exports = S3Service
