@@ -17,7 +17,6 @@ const store_in_s3 = async (imageUrl, objectKey) => {
   }
 }
 
-
 class DaliEService {
   constructor() {
     this.API_URL = 'https://api.openai.com/v1/images/generations'
@@ -45,7 +44,7 @@ class DaliEService {
       if (response.data?.data?.[0]?.url) {
         let tempUrl = response.data.data[0].url
         let url = await store_in_s3(tempUrl, prompt.name)
-        urls.push({ prompt, url: url , name: prompt.name})
+        urls.push({ prompt, url: url, name: prompt.name })
       } else {
         throw new Error('Unable to generate photo')
       }

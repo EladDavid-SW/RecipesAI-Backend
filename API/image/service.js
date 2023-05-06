@@ -1,32 +1,35 @@
+const AWS = require('aws-sdk')
+const S3Helper = require('../../services/S3/s3-helper')
+
 class ImageService {
   constructor() {
-    let DaliEService = require('../dali_e/service')
+    const DaliEService = require('../dali_e/service')
     this.daliEService = new DaliEService()
-    this.db = require('../../DB/mongoDB.js')
+    this.s3 = new S3Helper()
   }
 
   async getImages(groceries) {
-    // Get all the images we got on the DB
-    let collection = await this.db.query('Recipes', 'images', {})
+    const groceriesWithUnderscores = groceries.map((grocery) => {
+      return grocery.replace(/ /g, "_");
+    });
+    groceries = groceriesWithUnderscores
+    
+    let imagesUrl = []
+    let toGenerateImages = []
 
-    // Checking which images we don't need to retrieve
-    let images_url = []
-    const all_groceries = groceries
-    for (let grocery of all_groceries) {
-      if (collection)
-        for (let doc of collection) {
-          if (grocery == doc?.name) {
-            images_url.push({ name: doc.name, url: doc.url })
-            let new_groceries = await groceries.filter((grocery_item) => grocery !== grocery_item)
-            groceries = new_groceries
-            break
-          }
-        }
+    for (let grocery of groceries) {
+      const objectKey = grocery
+      const exists = await this.s3.objectExists(objectKey)
+      if (exists) {
+        const url = `https://recipes-elad-project.s3.amazonaws.com/${objectKey}`
+        imagesUrl.push({ name: grocery, url })
+      } else {
+        toGenerateImages.push(grocery)
+      }
     }
-
-    if (groceries.length > 0) {
+    if (toGenerateImages.length > 0) {
       let prompts = []
-      for (let grocery of groceries) {
+      for (let grocery of toGenerateImages) {
         prompts.push({ prompt: `white background with the grocery: ${grocery}`, name: grocery })
       }
 
@@ -35,16 +38,13 @@ class ImageService {
 
       // Store the results in DB:
       for (let new_image of new_images) {
-        let groceryName = new_image.name
-        let document = await { name: groceryName, url: new_image.url }
-        await this.db.create('Recipes', 'images', document)
-        new_image.name = groceryName
-        delete new_image.prompt
+        let name = new_image.name
+        let url = `https://recipes-elad-project.s3.amazonaws.com/${name}`
+        imagesUrl.push({ name, url })
       }
-      images_url = [...images_url, ...new_images]
     }
 
-    return images_url
+    return imagesUrl
   }
 }
 
