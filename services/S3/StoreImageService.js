@@ -5,7 +5,7 @@ const S3Service = require('./s3')
 const AWS = require('aws-sdk')
 const fs = require('fs')
 
-class ImageService {
+class StoreImageService {
   constructor() {
     this.s3Service = new S3Service(process.env.IMAGES_BUCKET_NAME)
   }
@@ -43,6 +43,10 @@ class ImageService {
       throw error
     }
   }
+
+  getImageUrl(objectKey){
+   return `https://recipes-elad-project.s3.amazonaws.com/${objectKey}`
+  }
 }
 
-module.exports = ImageService
+module.exports = StoreImageService

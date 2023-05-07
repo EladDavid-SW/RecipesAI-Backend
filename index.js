@@ -17,6 +17,7 @@ server.use(bodyParser.urlencoded({ extended: true }))
 // Files of the Routes
 const chatGPTRoutes = require('./api/chatGPT/routes')
 const image = require('./API/image/routes')
+const daliE = require('./API/dali_e/routes')
 
 server.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*')
@@ -28,6 +29,7 @@ server.use((req, res, next) => {
 // Routes
 server.use('/chatGPT', chatGPTRoutes)
 server.use('/images', image)
+server.use('/dali_e', daliE)
 
 const port = process.env.PORT || 3001
 server.listen(port, () => {

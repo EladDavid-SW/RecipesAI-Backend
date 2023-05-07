@@ -1,27 +1,27 @@
 const AWS = require('aws-sdk')
-const S3Helper = require('../../services/S3/s3-helper')
+const StoreImageService = require('../../services/S3/StoreImageService')
 
 class ImageService {
   constructor() {
     const DaliEService = require('../dali_e/service')
     this.daliEService = new DaliEService()
-    this.s3 = new S3Helper()
+    this.storeImage = new StoreImageService()
   }
 
   async getImages(groceries) {
     const groceriesWithUnderscores = groceries.map((grocery) => {
-      return grocery.replace(/ /g, "_");
-    });
+      return grocery.replace(/ /g, '_')
+    })
     groceries = groceriesWithUnderscores
-    
+
     let imagesUrl = []
     let toGenerateImages = []
 
     for (let grocery of groceries) {
       const objectKey = grocery
-      const exists = await this.s3.objectExists(objectKey)
+      const exists = await this.storeImage.objectExists(objectKey)
       if (exists) {
-        const url = `https://recipes-elad-project.s3.amazonaws.com/${objectKey}`
+        const url = this.storeImage.getImageUrl(objectKey)
         imagesUrl.push({ name: grocery, url })
       } else {
         toGenerateImages.push(grocery)

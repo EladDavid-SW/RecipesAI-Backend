@@ -1,5 +1,5 @@
 const axios = require('axios')
-const S3Helper = require('../../services/S3/s3-helper')
+const S3Helper = require('../../services/S3/StoreImageService')
 
 const store_in_s3 = async (imageUrl, objectKey) => {
   const s3 = new S3Helper()
