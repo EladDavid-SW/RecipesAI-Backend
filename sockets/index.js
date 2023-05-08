@@ -1,21 +1,16 @@
-const socketIO = require('socket.io');
-const wsPort = process.env.WEBSOCKET_PORT || 3002;
+const { Server } = require('socket.io');
 
-module.exports = (server) => {
-  const io = socketIO(server, {
-    path: '/socket.io',
-    serveClient: false,
-    port: wsPort,
+function setupWebSocket(server) {
+  const io = new Server(server, {
+    transports: ['websocket']
   });
 
   io.on('connection', (socket) => {
-    console.log('a user connected');
+    console.log('A user connected:', socket.id);
 
-    // Handle socket events here
-
-     // Send a greeting message to the client
-     socket.emit('greeting', 'Hello, client!');
+    // Send a greeting message to the client
+    socket.emit('greeting', 'Hello, client!');
   });
+}
 
-  return io;
-};
+module.exports = setupWebSocket;
