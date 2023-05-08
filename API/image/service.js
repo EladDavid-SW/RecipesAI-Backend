@@ -30,16 +30,16 @@ class ImageService {
     if (toGenerateImages.length > 0) {
       let prompts = []
       for (let grocery of toGenerateImages) {
-        prompts.push({ prompt: `white background with the grocery: ${grocery}`, name: grocery })
+        prompts.push({ prompt: `bright warm white background with the grocery: ${grocery}`, name: grocery })
       }
 
       // Generate images from Dali-E endpoint
       let new_images = await this.daliEService.generatePhoto(prompts)
 
-      // Store the results in DB:
+      // Store the results in s3:
       for (let new_image of new_images) {
         let name = new_image.name
-        let url = `https://recipes-elad-project.s3.amazonaws.com/${name}`
+        let url = this.storeImage.getImageUrl(name)
         imagesUrl.push({ name, url })
       }
     }
