@@ -4,9 +4,8 @@ class ImageController {
   }
 
   async getImages(req, res) {
-    const { images  } = req.body;
     try {
-      const response = await this.imageService.getImages(images);
+      const response = await this.imageService.getImages();
       res.status(200).json({ images: response });
     } catch (err) {
       console.error(err);
