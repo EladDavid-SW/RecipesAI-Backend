@@ -43,6 +43,7 @@ class DaliEService {
       const response = await axios.post(this.API_URL, data, { headers })
       if (response.data?.data?.[0]?.url) {
         let tempUrl = response.data.data[0].url
+        console.log('hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh   ' + tempUrl)
         let url = await store_in_s3(tempUrl, prompt.name)
         urls.push({ prompt, url: url, name: prompt.name })
       } else {

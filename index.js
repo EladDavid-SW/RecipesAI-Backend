@@ -44,5 +44,5 @@ server.listen(port, () => {
 })
 
 // Initialize WebSocket
-const setupWebSocket = require('./sockets')
+const { setupWebSocket } = require('./sockets')
 setupWebSocket(server)

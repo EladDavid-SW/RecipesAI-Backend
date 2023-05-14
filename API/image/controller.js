@@ -1,6 +1,8 @@
+
 class ImageController {
-  constructor(imageService) {
+  constructor(imageService, io) {
     this.imageService = imageService;
+    this.io = io; 
   }
 
   async getImages(req, res) {
@@ -12,6 +14,21 @@ class ImageController {
       res.status(500).json({ error: 'Server error' });
     }
   }
+
+  async uploadImage(req, res) {
+    try {
+      const { images } = req.body;
+  
+      // Send the image data to the WebSocket server
+      io.emit('uploadImage', images);
+  
+      res.status(200).json({ success: true });
+    } catch (error) {
+      console.error('Error uploading image:', error);
+      res.status(500).json({ error: 'Server error' });
+    }
+  }
+  
 
 }
 

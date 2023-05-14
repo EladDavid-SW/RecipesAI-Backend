@@ -1,29 +1,47 @@
-const { Server } = require('socket.io');
+const { Server } = require('socket.io')
+const ImageService = require('../API/image/service')
 
-function setupWebSocket(server, imageService) {
+let ioInstance
+
+function setupWebSocket(server) {
   const io = new Server(server, {
     transports: ['websocket'],
-  });
+  })
+
+  const imageService = new ImageService()
 
   io.on('connection', (socket) => {
-    console.log('A user connected:', socket.id);
+    console.log('A user connected:', socket.id)
 
     // Send a greeting message to the client
-    socket.emit('greeting', 'Hello, client!');
-  });
+    socket.emit('greeting', 'Hello, client!')
 
-  // Handle image upload event
-  io.on('uploadImage', async (imageData) => {
-    try {
-      // Save the image to the database
-      const newImage = await imageService.saveImage(imageData);
+    // Handle image upload event
+    socket.on('uploadImage', async (imageData) => {
+      try {
+        console.log('uploadImage')
+        // Save the image to the database
+        let { images } = imageData
+        const newImage = await imageService.saveImage(images)
 
-      // Emit the new image URL to all connected clients
-      io.emit('newImage', newImage.url);
-    } catch (error) {
-      console.error('Error saving image:', error);
-    }
-  });
+        // Emit the new image URL to all connected clients
+        socket.emit('newImage', newImage)
+      } catch (error) {
+        console.error('Error saving image:', error)
+      }
+    })
+  })
+
+  ioInstance = io
+
+  return io
 }
 
-module.exports = setupWebSocket;
+function getSocketIO() {
+  return ioInstance
+}
+
+module.exports = {
+  setupWebSocket,
+  getSocketIO,
+}

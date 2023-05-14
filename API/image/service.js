@@ -31,16 +31,16 @@ class ImageService {
   }
 
   async saveImage(imageID) {
-   return this.getImagesService([imageID])
+    return this.getImagesService(imageID)
   }
 
   async getImages() {
-    this.saveImage('pink lemon')
     let groceries = await this.fetchImages()
     return groceries ? this.getImagesService(groceries) : []
   }
 
   async getImagesService(groceries) {
+    console.log(groceries)
     const groceriesWithUnderscores = groceries.map((grocery) => {
       return grocery.replace(/ /g, '_')
     })
@@ -62,7 +62,7 @@ class ImageService {
     if (toGenerateImages.length > 0) {
       let prompts = []
       for (let grocery of toGenerateImages) {
-        prompts.push({ prompt: `bright warm white background with the grocery: ${grocery}`, name: grocery })
+        prompts.push({ prompt: `bright warm white background with the grocery: ${grocery}` + `, object in the middle, clear sharp photo, no crops`, name: grocery })
       }
 
       // Generate images from Dali-E endpoint
@@ -75,16 +75,14 @@ class ImageService {
         imagesUrl.push({ name, url })
 
         // store in db
-        if (!await this.existInDB(name)) {
+        if (!(await this.existInDB(name))) {
           await dbHelper.query('updateImages', { id: this.objectId, item: name })
         }
       }
     }
-
+console.log( imagesUrl[0]);
     return imagesUrl
   }
 }
 
 module.exports = ImageService
-
-
