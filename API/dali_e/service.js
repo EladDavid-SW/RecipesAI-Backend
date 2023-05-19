@@ -23,7 +23,7 @@ class DaliEService {
     this.API_KEY = process.env.OPENAI_API_KEY
   }
 
-  async generatePhoto(prompts) {
+  async generateImage(prompts) {
     const headers = {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${this.API_KEY}`,

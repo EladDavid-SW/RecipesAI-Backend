@@ -6,7 +6,7 @@ class DaliEController {
   async generateImages(req, res) {
     const { prompts  } = req.body;
     try {
-      const response = await this.daliEService.generatePhoto(prompts);
+      const response = await this.daliEService.generateImage(prompts);
       res.status(200).json({ images: response });
     } catch (err) {
       console.error(err);

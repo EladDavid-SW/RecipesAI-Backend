@@ -35,8 +35,21 @@ class ImageService {
   }
 
   async getImages() {
-    let groceries = await this.fetchImages()
-    return groceries ? this.getImagesService(groceries) : []
+    let images = await this.fetchImages()
+
+    const namesWithUnderscores = images.map((image) => {
+      return image.replace(/ /g, '_')
+    })
+    images = namesWithUnderscores
+
+    let imagesUrl = []
+    console.log(images);
+    for (let image of images) {
+      let name = image
+      let url = this.storeImage.getImageUrl(name)
+      imagesUrl.push({ name, url })
+    }
+    return imagesUrl
   }
 
   async getImagesService(groceries) {
@@ -66,7 +79,7 @@ class ImageService {
       }
 
       // Generate images from Dali-E endpoint
-      let new_images = await this.daliEService.generatePhoto(prompts)
+      let new_images = await this.daliEService.generateImage(prompts)
 
       for (let new_image of new_images) {
         // Store the results in s3:
@@ -80,7 +93,7 @@ class ImageService {
         }
       }
     }
-console.log( imagesUrl[0]);
+    console.log(imagesUrl[0])
     return imagesUrl
   }
 }
