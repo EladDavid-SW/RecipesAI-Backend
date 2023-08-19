@@ -19,18 +19,31 @@ function setupWebSocket(server) {
     // Handle image upload event
     socket.on('uploadImage', async (imageData) => {
       try {
-        console.log('uploadImage');
+        console.log('uploadImage')
         // Save the image to the database
-        let { images } = imageData;
-        const newImage = await imageService.saveImage(images);
-    
+        let { images } = imageData
+        const newImage = await imageService.saveImage(images)
+
         // Emit the new image URL to all connected clients
-        io.emit('newImage', newImage);
+        io.emit('newImage', newImage)
       } catch (error) {
-        console.error('Error saving image:', error);
+        console.error('Error saving image:', error)
       }
-    });
-    
+    })
+
+    // Handle image delete event
+    socket.on('deleteImage', async (imageName) => {
+      try {
+        console.log('deleteImage')
+        // Delete the image
+        const deleteResult = await imageService.deleteImage(imageName)
+
+        // Emit the result to the client
+        socket.emit('deleteImageResult', deleteResult)
+      } catch (error) {
+        console.error('Error deleting image:', error)
+      }
+    })
   })
 
   ioInstance = io

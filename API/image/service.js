@@ -1,6 +1,7 @@
 const AWS = require('aws-sdk')
 const dbHelper = require('../../services/db/dbHelper')
 const StoreImageService = require('../../services/S3/StoreImageService')
+const queries = require('../../services/db/queries')
 
 class ImageService {
   constructor() {
@@ -43,7 +44,7 @@ class ImageService {
     images = namesWithUnderscores
 
     let imagesUrl = []
-    console.log(images);
+    console.log(images)
     for (let image of images) {
       let name = image
       let url = this.storeImage.getImageUrl(name)
@@ -95,6 +96,17 @@ class ImageService {
     }
     console.log(imagesUrl[0])
     return imagesUrl
+  }
+
+  async deleteImage(imageName) {
+    try {
+      const deleteQuery = queries.deleteImage(imageName)
+      await dbHelper.query('deleteImage', deleteQuery)
+      return { success: true, message: 'Image deleted successfully' }
+    } catch (err) {
+      console.error('Error deleting image:', err)
+      throw new Error('Failed to delete image')
+    }
   }
 }
 

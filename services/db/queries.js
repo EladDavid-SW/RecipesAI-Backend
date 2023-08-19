@@ -8,4 +8,8 @@ module.exports = {
     query: { _id: param.id },
     update: { $addToSet: { images: param.item } },
   }),
+  deleteImage: (imageName) => ({
+    collectionName: 'images',
+    query: { name: imageName },
+  }),
 };
