@@ -15,7 +15,7 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 
 // Files of the Routes
-const chatGPTRoutes = require('./api/chatGPT/routes')
+const chatGPTRoutes = require('./API/chatGPT/routes')
 const image = require('./API/image/routes')
 const daliE = require('./API/dali_e/routes')
 
