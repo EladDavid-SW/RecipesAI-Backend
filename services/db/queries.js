@@ -3,13 +3,15 @@ module.exports = {
     collectionName: 'images',
     query: { images: { $exists: true, $not: { $size: 0 } } },
   }),
-  updateImages: ( param) => ({
+  updateImages: (param) => ({
     collectionName: 'images',
     query: { _id: param.id },
     update: { $addToSet: { images: param.item } },
   }),
-  deleteImage: (imageName) => ({
+  deleteImage: (param) => ({
     collectionName: 'images',
-    query: { name: imageName },
+    query: { _id: param.id },
+    update: { $pull: { images: param.item } },
   }),
-};
+  
+}

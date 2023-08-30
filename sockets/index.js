@@ -36,10 +36,10 @@ function setupWebSocket(server) {
       try {
         console.log('deleteImage')
         // Delete the image
-        const deleteResult = await imageService.deleteImage(imageName)
+        const imageUrl = await imageService.deleteImage(imageName)
 
         // Emit the result to the client
-        socket.emit('deleteImageResult', deleteResult)
+        io.emit('imageRemoved', imageUrl)
       } catch (error) {
         console.error('Error deleting image:', error)
       }

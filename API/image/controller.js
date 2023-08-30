@@ -6,7 +6,6 @@ class ImageController {
 
   async getImages(req, res) {
     try {
-      console.log('HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH')
       const response = await this.imageService.getImages()
       res.status(200).json({ images: response })
     } catch (err) {

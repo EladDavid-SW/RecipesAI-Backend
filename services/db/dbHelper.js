@@ -2,34 +2,31 @@ const { client } = require('./db')
 const queries = require('./queries')
 let databaseName = process.env.DB_NAME
 
+
 async function query(queryName, param) {
   return new Promise(async (resolve, reject) => {
     try {
-      const queryObj = queries[queryName](param);
-      const { collectionName, query, update } = queryObj;
-      const db = client.db(databaseName);
-      const collection = db.collection(collectionName);
+      const queryObj = queries[queryName](param)
+      const { collectionName, query, update } = queryObj
+      const db = client.db(databaseName)
+      const collection = db.collection(collectionName)
 
       if (update) {
-        const result = await collection.updateOne(query, update);
-        console.log('Update Successful:', result);
-        resolve(result);
-      } else if (queryName === 'deleteImage') {
-        const result = await collection.deleteOne(query);
-        console.log('Delete Successful:', result);
-        resolve(result);
-      } else {
-        const result = await collection.find(query).toArray();
-        console.log('Query Done Successfully');
-        resolve(result);
+        const result = await collection.updateOne(query, update)
+        console.log('Update Successful:', result)
+        resolve(result)
+      }
+      else {
+        const result = await collection.find(query).toArray()
+        console.log('Query Done Successfully')
+        resolve(result)
       }
     } catch (err) {
-      console.log('Error performing query:', err);
-      reject(err);
+      console.log('Error performing query:', err)
+      reject(err)
     }
-  });
+  })
 }
-
 
 async function create(collectionName, document) {
   try {

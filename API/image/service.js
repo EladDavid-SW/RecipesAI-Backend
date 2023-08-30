@@ -18,6 +18,7 @@ class ImageService {
       if (!groceriesObj) {
         return []
       }
+      console.log('Image doc:')
       console.log(groceriesObj)
       this.objectId = groceriesObj._id // Store the object ID
       return groceriesObj.images
@@ -44,7 +45,6 @@ class ImageService {
     images = namesWithUnderscores
 
     let imagesUrl = []
-    console.log(images)
     for (let image of images) {
       let name = image
       let url = this.storeImage.getImageUrl(name)
@@ -54,7 +54,6 @@ class ImageService {
   }
 
   async getImagesService(groceries) {
-    console.log(groceries)
     const groceriesWithUnderscores = groceries.map((grocery) => {
       return grocery.replace(/ /g, '_')
     })
@@ -94,14 +93,18 @@ class ImageService {
         }
       }
     }
-    console.log(imagesUrl[0])
     return imagesUrl
   }
 
   async deleteImage(imageName) {
     try {
-      const deleteQuery = queries.deleteImage(imageName)
-      await dbHelper.query('deleteImage', deleteQuery)
+      if (!this.objectId) {
+        const result = await dbHelper.query('getImages'); 
+        this.objectId = result[0]._id; 
+      }
+      await dbHelper.query('deleteImage', { id: this.objectId, item: imageName })
+      let imagesUrl = this.storeImage.getImageUrl(imageName)
+      return imagesUrl
       return { success: true, message: 'Image deleted successfully' }
     } catch (err) {
       console.error('Error deleting image:', err)
