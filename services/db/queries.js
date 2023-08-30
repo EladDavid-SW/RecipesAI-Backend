@@ -11,7 +11,7 @@ module.exports = {
   deleteImage: (param) => ({
     collectionName: 'images',
     query: { _id: param.id },
-    update: { $pull: { images: param.item } },
+    update: { $pull: { images: { $in: [param.item] } } }
   }),
   
 }
