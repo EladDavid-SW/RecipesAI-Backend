@@ -1,7 +1,7 @@
 # RecipesAI-Backend
 
 [Visit RecipesAI Website](https://elad-ai-recipes.netlify.app) <br/>
-[Go to the RecipesAI-Frontend Repository](https://github.com/EladDavid-SW/RecipesAI-Frontend) 
+[Go to RecipesAI-Frontend Repository](https://github.com/EladDavid-SW/RecipesAI-Frontend) 
 ---
 
 ## Table of Contents
