@@ -21,7 +21,7 @@ Welcome to the RecipesAI-Backend repository! This is the backend component of th
 
 - Integration with ChatGPT for recipe generation.
 - Integration with DALL·E for dynamic image generation.
-- Efficient management of grocery resources and associated images.
+- Efficient management of ingredient resources and associated images.
 - Storage of images in an S3 bucket.
 - Background worker for image generation.
 - Real-time functionality using WebSocket.
