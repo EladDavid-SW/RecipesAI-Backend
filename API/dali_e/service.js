@@ -33,7 +33,6 @@ class DaliEService {
 
     for (const prompt of prompts) {
       const data = {
-        model: 'image-alpha-001',
         prompt: prompt.prompt,
         num_images: 1,
         size: '512x512',
