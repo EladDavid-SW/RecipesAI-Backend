@@ -1,20 +1,16 @@
 class ChatGPTService {
   constructor() {
-    const { Configuration, OpenAIApi } = require('openai')
+    const OpenAI = require('openai')
     this.apiKey = process.env.OPENAI_API_KEY
-    const config = new Configuration({ apiKey: this.apiKey })
-    this.openai = new OpenAIApi(config)
+    this.openai = new OpenAI({ apiKey: this.apiKey })
   }
 
   async generateResponse(message) {
-    const response = await this.openai.createCompletion({
-      model: 'text-davinci-003',
-      prompt: message,
-      temperature: 1,
-      max_tokens: 1000,
+    const response = await this.openai.chat.completions.create({
+      model: 'gpt-3.5-turbo',
+      messages: [{ role: 'user', content: message }],
     })
-
-    const { text } = response.data.choices[0]
+    const text = response.choices[0].message.content
     return text.trim()
   }
 }
