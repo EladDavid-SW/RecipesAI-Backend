@@ -19,30 +19,26 @@ const store_in_s3 = async (imageUrl, objectKey) => {
 
 class DaliEService {
   constructor() {
-    this.API_URL = 'https://api.openai.com/v1/images/generations'
-    this.API_KEY = process.env.OPENAI_API_KEY
+    const OpenAI = require('openai')
+    this.apiKey = process.env.OPENAI_API_KEY
+    this.openai = new OpenAI({ apiKey: this.apiKey })
   }
 
   async generateImage(prompts) {
-    const headers = {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${this.API_KEY}`,
-    }
+
 
     let urls = []
 
     for (const prompt of prompts) {
-      const data = {
+   
+      const response = await this.openai.images.generate({
+        model: "dall-e-3",
         prompt: prompt.prompt,
-        num_images: 1,
-        size: '512x512',
-        response_format: 'url',
-      }
-
-      const response = await axios.post(this.API_URL, data, { headers })
-      if (response.data?.data?.[0]?.url) {
-        let tempUrl = response.data.data[0].url
-        console.log('hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh   ' + tempUrl)
+        n: 1,
+        size: "1024x1024",
+      });
+      if (response.data?.[0]?.url) {
+        let tempUrl = response.data[0].url
         let url = await store_in_s3(tempUrl, prompt.name)
         urls.push({ prompt, url: url, name: prompt.name })
       } else {
